@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<AssemblyVersion>2.0.0</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)-beta</FileVersion>
+		<Version>$(AssemblyVersion)-beta</Version>
+		<Authors>Rugal</Authors>
+		<RepositoryUrl>https://github.com/john2653589/Rugal.TokenAuth</RepositoryUrl>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Rugal.TokenAuth.Core\Rugal.TokenAuth.Core.csproj" />
+	</ItemGroup>
+
+</Project>
