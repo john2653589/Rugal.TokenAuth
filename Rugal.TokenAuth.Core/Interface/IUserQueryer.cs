@@ -4,5 +4,5 @@ namespace Rugal.TokenAuth.Core.Interface;
 
 public interface IUserQueryer
 {
-    public Dictionary<string, object> QueryUserClaims(Guid UserId);
+    public bool QueryUserClaims(Guid UserId, out Dictionary<string, object> Claims, out string Message);
 }

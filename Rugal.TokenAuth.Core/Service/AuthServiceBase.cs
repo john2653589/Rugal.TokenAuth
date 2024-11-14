@@ -101,7 +101,15 @@ public abstract class UserNameAuthServiceBase<TModel, TResult>
                 Message = GetMessages(LoginStatusType.HashVerifyFails),
             };
 
-        var Claims = UserQueryer.QueryUserClaims(User.UserId);
+        if (!UserQueryer.QueryUserClaims(User.UserId, out var Claims, out var Message))
+        {
+            return new LoginResult()
+            {
+                Message = new List<string> { Message },
+                Status = LoginStatusType.Other,
+            };
+        }
+
         Tokens = TokenService.GenerateAuthTokens(User.UserId, Claims);
         return new LoginResult()
         {

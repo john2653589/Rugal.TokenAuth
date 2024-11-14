@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using Rugal.DotNetLib.Core.TimeConvert;
 using Rugal.TokenAuth.Core.Interface;
 using Rugal.TokenAuth.Core.Model;
 using Rugal.TokenAuth.Core.Service;
@@ -33,9 +34,38 @@ public class JwtAuthAttribute : Attribute, IAuthorizationFilter
         var TokenParam = TokenService.TokenParam;
 
         var AccessTokenVerify = TokenService.VerifyAll(Token, out var Claims);
-        if (!AccessTokenVerify)
+        bool RunRefreshToken()
         {
-            if (!TokenParam.AuthRefreshToken)
+            var Tokens = TokenService.RefreshTokens(RefreshToken);
+            if (Tokens is null)
+                return false;
+            HttpContext.Response.Headers[TokenParam.NewAccessTokenHeader] = Tokens.AccessToken;
+            HttpContext.Response.Headers[TokenParam.NewRefreshTokenHeader] = Tokens.RefreshToken;
+
+            Token = Tokens.AccessToken;
+            Claims = Tokens.GetAccessTokenClaims();
+            return true;
+        }
+
+        if (AccessTokenVerify && TokenParam.AutoRefreshToken)
+        {
+            var Expired = Claims?.FirstOrDefault(Item => Item.Type == "exp")?.Value;
+            if (Expired is not null && long.TryParse(Expired, out var ExpiredSecond))
+            {
+                var ExpiredTime = DateTimeOffset.FromUnixTimeSeconds(ExpiredSecond);
+                var RemindTime = TokenParam.AutoRefreshTokenExpires.ParseTimeString();
+                var CanUpdateTime = ExpiredTime.Subtract(RemindTime).DateTime;
+                if (DateTime.Now > CanUpdateTime)
+                    if (!RunRefreshToken())
+                    {
+                        context.Result = DefaultUnAuthResult;
+                        return;
+                    }
+            }
+        }
+        else
+        {
+            if (!TokenParam.AutoRefreshToken)
             {
                 context.Result = DefaultUnAuthResult;
                 return;
@@ -48,12 +78,11 @@ public class JwtAuthAttribute : Attribute, IAuthorizationFilter
                 return;
             }
 
-            var Tokens = TokenService.RefreshTokens(RefreshToken);
-            HttpContext.Response.Headers[TokenParam.NewAccessTokenHeader] = Tokens.AccessToken;
-            HttpContext.Response.Headers[TokenParam.NewRefreshTokenHeader] = Tokens.RefreshToken;
-
-            Token = Tokens.AccessToken;
-            Claims = Tokens.GetAccessTokenClaims();
+            if (!RunRefreshToken())
+            {
+                context.Result = DefaultUnAuthResult;
+                return;
+            }
         }
 
         var AllUserInfo = Provider.GetServices<IUserInfo>();

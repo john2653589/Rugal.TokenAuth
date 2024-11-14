@@ -44,6 +44,8 @@ public class TokenParam
     public string IssuerSigningKey { get; set; }
     public string AccessTokenExpires { get; set; } = "1h";
     public string RefreshTokenExpires { get; set; } = "30d";
+    public string AutoRefreshTokenExpires { get; set; } = "30m";
+    public bool AutoRefreshToken { get; set; } = false;
     public string Issuer { get; set; } = "TokenAuth";
     public string Audience { get; set; } = "TokenAuth";
     public bool? ValidateIssuerSigningKey { get; set; } = true;
@@ -51,7 +53,6 @@ public class TokenParam
     public bool? ValidateAudience { get; set; } = true;
     public bool? ValidateLifetime { get; set; } = true;
     public bool? RequireExpirationTime { get; set; } = true;
-    public bool AuthRefreshToken { get; set; } = false;
     public string RefreshTokenHeader { get; set; } = "X-Refresh-Token";
     public string NewAccessTokenHeader { get; set; } = "X-New-Access-Token";
     public string NewRefreshTokenHeader { get; set; } = "X-New-Refresh-Token";

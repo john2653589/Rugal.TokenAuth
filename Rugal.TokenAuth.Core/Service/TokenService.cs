@@ -72,7 +72,9 @@ public partial class TokenService
     public AuthTokens RefreshTokens(Guid UserId)
     {
         var UserQueryer = Provider.GetService<IUserQueryer>();
-        var Claims = UserQueryer.QueryUserClaims(UserId);
+        if (!UserQueryer.QueryUserClaims(UserId, out var Claims, out var Message))
+            return null;
+
         var AccessToken = GenerateAccessToken(UserId, Claims);
         var NewRefreshToken = GenerateRefreshToken(UserId);
         var Result = new AuthTokens(NewRefreshToken.Claims)

@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-		<AssemblyVersion>2.0.4</AssemblyVersion>
+		<AssemblyVersion>2.0.9</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)-beta</FileVersion>
 		<Version>$(AssemblyVersion)-beta</Version>
 		<Authors>Rugal</Authors>
@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Rugal.TokenAuth.Core" Version="2.0.4-beta" />
+	  <PackageReference Include="Rugal.TokenAuth.Core" Version="2.0.9-beta" />
 	</ItemGroup>
 
 </Project>
