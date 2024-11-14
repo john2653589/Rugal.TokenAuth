@@ -47,6 +47,7 @@ public class JwtAuthAttribute : Attribute, IAuthorizationFilter
             return true;
         }
 
+        RefreshToken = HttpContext.Request.Headers[TokenParam.RefreshTokenHeader];
         if (AccessTokenVerify)
         {
             if (TokenParam.AutoRefreshToken)
@@ -54,9 +55,9 @@ public class JwtAuthAttribute : Attribute, IAuthorizationFilter
                 var Expired = Claims?.FirstOrDefault(Item => Item.Type == "exp")?.Value;
                 if (Expired is not null && long.TryParse(Expired, out var ExpiredSecond))
                 {
-                    var ExpiredTime = DateTimeOffset.FromUnixTimeSeconds(ExpiredSecond);
+                    var ExpiredTime = DateTimeOffset.FromUnixTimeSeconds(ExpiredSecond).LocalDateTime;
                     var RemindTime = TokenParam.AutoRefreshTokenExpires.ParseTimeString();
-                    var CanUpdateTime = ExpiredTime.Subtract(RemindTime).DateTime;
+                    var CanUpdateTime = ExpiredTime.Subtract(RemindTime);
                     if (DateTime.Now > CanUpdateTime)
                         if (!RunRefreshToken())
                         {
@@ -74,7 +75,6 @@ public class JwtAuthAttribute : Attribute, IAuthorizationFilter
                 return;
             }
 
-            RefreshToken = HttpContext.Request.Headers[TokenParam.RefreshTokenHeader];
             if (string.IsNullOrWhiteSpace(RefreshToken))
             {
                 context.Result = DefaultUnAuthResult;
