@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Rugal.TokenAuth.Core" Version="2.0.10-beta" />
+	  <PackageReference Include="Rugal.TokenAuth.Core" Version="2.0.10.1-beta" />
 	</ItemGroup>
 
 </Project>
