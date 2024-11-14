@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		
-		<AssemblyVersion>2.0.9</AssemblyVersion>
+		<AssemblyVersion>2.0.10</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)-beta</FileVersion>
 		<Version>$(AssemblyVersion)-beta</Version>
 		<Authors>Rugal</Authors>
