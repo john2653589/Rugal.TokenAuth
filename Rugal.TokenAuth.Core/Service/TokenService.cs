@@ -77,7 +77,7 @@ public partial class TokenService
 
         var AccessToken = GenerateAccessToken(UserId, Claims);
         var NewRefreshToken = GenerateRefreshToken(UserId);
-        var Result = new AuthTokens(NewRefreshToken.Claims)
+        var Result = new AuthTokens(AccessToken.Claims)
         {
             AccessTokenId = AccessToken.TokenId,
             AccessToken = AccessToken.Token,
